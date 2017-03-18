@@ -1,0 +1,2 @@
+[terra03vm]
+terra03vm.southcentralus.cloudapp.azure.com ansible_user=terrabsd

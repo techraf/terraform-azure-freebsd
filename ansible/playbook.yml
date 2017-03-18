@@ -1,0 +1,35 @@
+---
+- hosts: terra03vm
+
+  pre_tasks:
+    - name: Ensure terrabsd has password set
+      become: yes
+      user:
+        name: terrabsd
+        password: "{{ lookup('password', './tmp/passwordfile length=63 encrypt=md5_crypt') }}"
+
+  tasks:
+    - name: Check pkg -N
+      command: pkg -N
+      register: pkg_bootstrapped_check
+      changed_when: false
+
+    - name: Ensure pkg is bootstrapped
+      become: yes
+      command: pkg bootstrap
+      environment:
+        ASSUME_ALWAYS_YES: YES
+      when: pkg_bootstrapped_check.rc == 1
+
+    - name: Ensure pkg is updated
+      become: yes
+      command: pkg update
+      environment:
+        ASSUME_ALWAYS_YES: YES
+      changed_when: false
+
+    - name: Ensure openvpn is installed
+      become: yes
+      pkgng:
+        name: openvpn
+        state: present
