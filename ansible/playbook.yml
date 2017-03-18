@@ -33,3 +33,44 @@
       pkgng:
         name: openvpn
         state: present
+
+    - name: Ensure directory for keys exists
+      become: yes
+      file:
+        dest: /usr/local/etc/openvpn/keys
+        state: directory
+        owner: nobody
+        group: wheel
+        mode: 0700
+
+    - name: Ensure DH is present
+      become: yes
+      copy:
+        src: dh1024.pem
+        dest: /usr/local/etc/openvpn/keys/dh1024.pem
+        owner: nobody
+        mode: 0400
+
+    - name: Ensure server key is present
+      become: yes
+      copy:
+        src: server.key
+        dest: /usr/local/etc/openvpn/keys/server.key
+        owner: nobody
+        mode: 0400
+
+    - name: Ensure server certificate is present
+      become: yes
+      copy:
+        src: server.crt
+        dest: /usr/local/etc/openvpn/keys/server.crt
+        owner: nobody
+        mode: 0444
+
+    - name: Ensure CA certificate is present
+      become: yes
+      copy:
+        src: ca.crt
+        dest: /usr/local/etc/openvpn/keys/ca.crt
+        owner: nobody
+        mode: 0444
