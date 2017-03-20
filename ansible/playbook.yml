@@ -118,16 +118,23 @@
         - natd_enable="YES"
         - natd_interface="hn0"
         - natd_flags="-dynamic -m"
+        - "# test 14"
+      notify: Reboot server
 
-    - name: Reboot
+  handlers:
+    - name: Reboot server
       become: yes
-      command: sleep 2 ; reboot
-      async: 0
+      shell: sleep 5 && reboot
+      async: 1
       poll: 0
       ignore_errors: true
+      changed_when: true
+      notify: Wait for the server to reboot
     
     - name: Wait for the server to reboot
       local_action:
         module: wait_for
         host: "{{ inventory_hostname }}"
+        port: 22
+        delay: 60
         state: started
