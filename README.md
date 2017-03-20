@@ -11,11 +11,11 @@ Starting openvpn.
 
 https://www.freebsd.org/cgi/man.cgi?query=pkg&sektion=8&manpath=freebsd-release-ports
 
+```
 # pkg -N update
 pkg: pkg is not installed
 root@terra03vm:/usr/home/terrabsd # echo $?
 1
-
 # env ASSUME_ALWAYS_YES=YES pkg update
 Bootstrapping pkg from pkg+http://pkg.FreeBSD.org/FreeBSD:11:amd64/quarterly, please wait...
 Verifying signature with trusted certificate pkg.freebsd.org.2013102301... done
@@ -34,9 +34,8 @@ FreeBSD repository is up-to-date.
 All repositories are up-to-date.
 root@terra03vm:/usr/home/terrabsd # echo $?
 0
-
-
 # pkg -N update
 Updating FreeBSD repository catalogue...
 FreeBSD repository is up-to-date.
 All repositories are up-to-date.
+```
