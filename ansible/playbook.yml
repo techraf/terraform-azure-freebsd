@@ -12,18 +12,18 @@
         password: "{{ lookup('password', './tmp/passwordfile length=63 encrypt=md5_crypt') }}"
 
   tasks:
+    - name: Check pkg -N
+      command: pkg -N
+      register: pkg_bootstrap_check
+      failed_when: false
+      changed_when: false
+
     - name: Ensure pkg is bootstrapped
       become: yes
       command: pkg bootstrap
-      args:
-        creates: /usr/sbin/pkg
       environment:
         ASSUME_ALWAYS_YES: YES
-
-    - name: Check pkg -N
-      command: pkg -N
-      register: pkg_check
-      changed_when: false
+      when: "'pkg: pkg is not installed' in pkg_bootstrap_check.stderr"
 
     - name: Ensure pkg is updated
       become: yes
