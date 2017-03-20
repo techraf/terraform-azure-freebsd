@@ -20,10 +20,10 @@
       environment:
         ASSUME_ALWAYS_YES: YES
 
-   - name: Check pkg -N
-     command: pkg -N
-     register: pkg_check
-     changed_when: false
+    - name: Check pkg -N
+      command: pkg -N
+      register: pkg_check
+      changed_when: false
 
     - name: Ensure pkg is updated
       become: yes
