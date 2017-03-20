@@ -100,9 +100,11 @@
       become: yes
       command: sysrc openvpn_if="tun"
 
-    - name: Ensure pkg is updated
+    - name: Ensure openvpn service is started
       become: yes
-      command: service openvpn start
+      service:
+        name: openvpn
+        state: started
 
     - name: Ensure routing is configured
       become: yes
