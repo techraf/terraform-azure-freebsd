@@ -1,3 +1,13 @@
+# to follow
+
+```
+# sysrc openvpn_enable="YES"
+openvpn_enable:  -> YES
+# sysrc openvpn_if="tun"
+openvpn_if:  -> tun
+# service openvpn start
+Starting openvpn.
+```
 
 https://www.freebsd.org/cgi/man.cgi?query=pkg&sektion=8&manpath=freebsd-release-ports
 
