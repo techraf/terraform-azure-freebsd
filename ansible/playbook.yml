@@ -1,6 +1,9 @@
 ---
 - hosts: terra03vm
 
+  vars_files:
+    - vars/main.yml
+
   pre_tasks:
     - name: Ensure terrabsd has password set
       become: yes
@@ -9,17 +12,17 @@
         password: "{{ lookup('password', './tmp/passwordfile length=63 encrypt=md5_crypt') }}"
 
   tasks:
-    - name: Check pkg -N
-      command: pkg -N
-      register: pkg_bootstrapped_check
-      changed_when: false
+#    - name: Check pkg -N
+#      command: pkg -N
+#      register: pkg_bootstrapped_check
+#      changed_when: false
 
     - name: Ensure pkg is bootstrapped
       become: yes
       command: pkg bootstrap
       environment:
         ASSUME_ALWAYS_YES: YES
-      when: pkg_bootstrapped_check.rc == 1
+#      when: pkg_bootstrapped_check.rc == 1
 
     - name: Ensure pkg is updated
       become: yes
@@ -59,6 +62,14 @@
         owner: nobody
         mode: 0400
 
+    - name: Ensure ta key is present
+      become: yes
+      copy:
+        src: ta.key
+        dest: /usr/local/etc/openvpn/keys/ta.key
+        owner: nobody
+        mode: 0400
+
     - name: Ensure server certificate is present
       become: yes
       copy:
@@ -74,3 +85,38 @@
         dest: /usr/local/etc/openvpn/keys/ca.crt
         owner: nobody
         mode: 0444
+
+    - name: Ensure configuration file is in-place
+      become: yes
+      template:
+        src: server.conf.j2
+        dest: /usr/local/etc/openvpn/openvpn.conf
+
+    - name: Ensure pkg is updated
+      become: yes
+      command: sysrc openvpn_enable="YES"
+
+    - name: Ensure pkg is updated
+      become: yes
+      command: sysrc openvpn_if="tun"
+
+    - name: Ensure pkg is updated
+      become: yes
+      command: service openvpn start
+
+    - name: Ensure routing is configured
+      become: yes
+      lineinfile:
+        dest: /etc/rc.conf
+        line: "{{ item }}"
+      with_items:
+        - firewall_enable="YES"
+        - firewall_type="open"
+        - gateway_enable="YES"
+        - natd_enable="YES"
+        - natd_interface="hn0"
+        - natd_flags="-dynamic -m"
+
+    - name: Reboot
+      become: yes
+      command: reboot
