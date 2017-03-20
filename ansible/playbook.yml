@@ -93,11 +93,11 @@
         src: server.conf.j2
         dest: /usr/local/etc/openvpn/openvpn.conf
 
-    - name: Ensure pkg is updated
+    - name: Ensure openvpn is enabled in sysrc
       become: yes
       command: sysrc openvpn_enable="YES"
 
-    - name: Ensure pkg is updated
+    - name: Ensure openvpn interface is set to tun in sysrc
       become: yes
       command: sysrc openvpn_if="tun"
 
