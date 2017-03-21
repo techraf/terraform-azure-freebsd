@@ -1,7 +1,7 @@
 server 192.168.255.0 255.255.255.0
 verb 3
 #tls-auth /etc/openvpn/pki/ta.key
-tls-auth {{openvpn_keydir}}/ta.key
+tls-auth {{ openvpn_keys_directory }}/ta.key
 key-direction 0
 keepalive 10 60
 persist-key
@@ -22,7 +22,7 @@ group nogroup
 
 # client-config-dir /etc/openvpn/staticclients
 
-ca {{openvpn_keydir}}/ca.crt
-cert {{openvpn_keydir}}/server.crt
-key {{openvpn_keydir}}/server.key  # This file should be kept secret
-dh {{openvpn_keydir}}/dh{{openvpn_key_size}}.pem
+ca {{ openvpn_keys_directory }}/ca.crt
+cert {{ openvpn_keys_directory }}/server.crt
+key {{ openvpn_keys_directory }}/server.key  # This file should be kept secret
+dh {{ openvpn_keys_directory }}/dh{{openvpn_key_size}}.pem
