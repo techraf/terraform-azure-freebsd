@@ -93,13 +93,13 @@
         src: server.conf.j2
         dest: "{{ openvpn_config_directory }}/openvpn.conf"
 
-    - name: Ensure OpenVPN is enabled in sysrc
-      become: yes
-      command: sysrc openvpn_enable="YES"
+    # - name: Ensure OpenVPN is enabled in sysrc
+    #   become: yes
+    #   command: sysrc openvpn_enable="YES"
 
-    - name: Ensure OpenVPN interface is set to 'tun' in sysrc
-      become: yes
-      command: sysrc openvpn_if="tun"
+    # - name: Ensure OpenVPN interface is set to 'tun' in sysrc
+    #   become: yes
+    #   command: sysrc openvpn_if="tun"
 
     - name: Ensure IP routing is configured
       become: yes
@@ -107,6 +107,8 @@
         dest: /etc/rc.conf
         line: "{{ item }}"
       with_items:
+        - openvpn_enable="YES"
+        - openvpn_if="tun"
         - firewall_enable="YES"
         - firewall_type="open"
         - gateway_enable="YES"
