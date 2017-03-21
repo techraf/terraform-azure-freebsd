@@ -12,13 +12,13 @@
         password: "{{ lookup('password', './tmp/passwordfile length=63 encrypt=md5_crypt') }}"
 
   tasks:
-    - name: Check pkg -N
+    - name: Check and register if pkgng is installed (pkg -N)
       command: pkg -N
       register: pkg_bootstrap_check
       failed_when: false
       changed_when: false
 
-    - name: Ensure pkg is bootstrapped
+    - name: Ensure pkg is bootstrapped (if not installed, based on result of the previous task)
       become: yes
       command: pkg bootstrap
       environment:
@@ -32,13 +32,13 @@
         ASSUME_ALWAYS_YES: YES
       changed_when: false
 
-    - name: Ensure openvpn is installed
+    - name: Ensure OpenVPN is installed
       become: yes
       pkgng:
         name: openvpn
         state: present
 
-    - name: Ensure directory for keys exists
+    - name: Ensure directory for OpenVPN keys exists
       become: yes
       file:
         dest: /usr/local/etc/openvpn/keys
@@ -93,21 +93,21 @@
         src: server.conf.j2
         dest: /usr/local/etc/openvpn/openvpn.conf
 
-    - name: Ensure openvpn is enabled in sysrc
+    - name: Ensure OpenVPN is enabled in sysrc
       become: yes
       command: sysrc openvpn_enable="YES"
 
-    - name: Ensure openvpn interface is set to tun in sysrc
+    - name: Ensure OpenVPN interface is set to 'tun' in sysrc
       become: yes
       command: sysrc openvpn_if="tun"
 
-    - name: Ensure openvpn service is started
+    - name: Ensure OpenVPN service is started
       become: yes
       service:
         name: openvpn
         state: started
 
-    - name: Ensure routing is configured
+    - name: Ensure IP routing is configured
       become: yes
       lineinfile:
         dest: /etc/rc.conf
