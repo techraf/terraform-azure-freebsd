@@ -101,12 +101,6 @@
       become: yes
       command: sysrc openvpn_if="tun"
 
-    - name: Ensure OpenVPN service is started
-      become: yes
-      service:
-        name: openvpn
-        state: started
-
     - name: Ensure IP routing is configured
       become: yes
       lineinfile:
