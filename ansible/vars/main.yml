@@ -1,3 +1,4 @@
 ---
-openvpn_keydir: /usr/local/etc/openvpn/keys
+openvpn_config_directory: /usr/local/etc/openvpn
+openvpn_keys_directory: {{ openvpn_config_directory }}/keys
 openvpn_key_size: 1024

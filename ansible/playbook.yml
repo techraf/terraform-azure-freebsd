@@ -4,6 +4,10 @@
   vars_files:
     - vars/main.yml
 
+  vars:
+    openvpn_config_directory: /usr/local/etc/openvpn
+    openvpn_keys_directory: {{ openvpn_config_directory }}/keys
+
   pre_tasks:
     - name: Ensure terrabsd has password set
       become: yes
@@ -41,7 +45,7 @@
     - name: Ensure directory for OpenVPN keys exists
       become: yes
       file:
-        dest: /usr/local/etc/openvpn/keys
+        dest: "{{ openvpn_keys_directory }}"
         state: directory
         owner: nobody
         group: wheel
@@ -51,7 +55,7 @@
       become: yes
       copy:
         src: dh1024.pem
-        dest: /usr/local/etc/openvpn/keys/dh1024.pem
+        dest: "{{ openvpn_keys_directory }}/dh1024.pem"
         owner: nobody
         mode: 0400
 
@@ -59,7 +63,7 @@
       become: yes
       copy:
         src: server.key
-        dest: /usr/local/etc/openvpn/keys/server.key
+        dest: "{{ openvpn_keys_directory }}/server.key"
         owner: nobody
         mode: 0400
 
@@ -67,7 +71,7 @@
       become: yes
       copy:
         src: ta.key
-        dest: /usr/local/etc/openvpn/keys/ta.key
+        dest: "{{ openvpn_keys_directory }}/ta.key"
         owner: nobody
         mode: 0400
 
@@ -75,7 +79,7 @@
       become: yes
       copy:
         src: server.crt
-        dest: /usr/local/etc/openvpn/keys/server.crt
+        dest: "{{ openvpn_keys_directory }}/server.crt"
         owner: nobody
         mode: 0444
 
@@ -83,7 +87,7 @@
       become: yes
       copy:
         src: ca.crt
-        dest: /usr/local/etc/openvpn/keys/ca.crt
+        dest: "{{ openvpn_keys_directory }}/ca.crt"
         owner: nobody
         mode: 0444
 
@@ -91,7 +95,7 @@
       become: yes
       template:
         src: server.conf.j2
-        dest: /usr/local/etc/openvpn/openvpn.conf
+        dest: "{{ openvpn_config_directory }}/openvpn.conf"
 
     - name: Ensure OpenVPN is enabled in sysrc
       become: yes
